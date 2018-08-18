@@ -1,0 +1,13 @@
+{
+  "name": "bash-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deps:install": "sh ./scripts/install.sh",
+    "hosts:add": "sh ./scripts/update-hosts.sh add",
+    "hosts:remove": "sh ./scripts/update-hosts.sh remove"
+  },
+  "author": "",
+  "license": "ISC"
+}
