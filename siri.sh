@@ -10,7 +10,7 @@ ACTION=$2
 #   Constants
 # ------------------------------------------------------------------------------------------------------------------- #
 HOSTS="/etc/hosts"
-ROOT_PASSWORD=$(cat config.json | jq --raw-output '.rootPassword')
+CONFIG=~/.siri_config.json
 
 # ------------------------------------------------------------------------------------------------------------------- #
 #   Functions
@@ -28,6 +28,17 @@ getOsName() {
       msys*)    echo "WINDOWS" ;;
       *)        echo "unknown: $OSTYPE" ;;
     esac
+}
+
+savePassword() {
+    if [ -z "$1" ]; then
+        echo "==> ERROR: Password is not provided!"
+        exit 1
+    fi
+
+    echo "==> Saving password into file $CONFIG..." \
+        && echo "{\"rootPassword\":\"$1\"}" > ${CONFIG} \
+        && echo "...Done!"
 }
 
 ##
@@ -90,6 +101,14 @@ executeHosts() {
 # ------------------------------------------------------------------------------------------------------------------- #
 #   Initialization
 # ------------------------------------------------------------------------------------------------------------------- #
+if [ -f ${CONFIG} ]; then
+    ROOT_PASSWORD=$(cat ${CONFIG} | jq --raw-output '.rootPassword')
+else
+    echo "Please, provide root password:"
+    read ROOT_PASSWORD
+    savePassword ${ROOT_PASSWORD}
+fi
+
 case "$COMMAND" in
   install)
         executeInstall
